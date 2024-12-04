@@ -1,0 +1,116 @@
+/* Container for the dashboard */
+.dashboard-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9; /* Light grey background to make the white list stand out */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.dashboard-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Patient list container */
+.patient-list {
+  background-color: #ffffff; /* White background for the list */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual patient item */
+.patient-item {
+  display: flex;
+  justify-content: space-between; /* Distribute items (name, role, button) */
+  align-items: center; /* Vertically align items */
+  padding: 10px 20px; /* Reduced padding for shorter height */
+  height: 60px; /* Set a fixed height for each patient tile */
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer; /* Makes the row clickable */
+  transition: background-color 0.3s ease;
+  position: relative; /* To position the button separately */
+}
+
+/* Last item should not have a bottom border */
+.patient-item:last-child {
+  border-bottom: none;
+}
+
+/* Patient name and role container */
+.patient-info {
+  display: flex;
+  justify-content: center; /* Center the name */
+  flex-grow: 1; /* Take up remaining space to push the role and button */
+}
+
+/* Patient name */
+.patient-name {
+  font-weight: bold;
+  color: #333;
+  margin-right: 10px; /* Space between name and role */
+}
+
+/* Patient role (aligns to the right) */
+.patient-role {
+  color: #777;
+  margin-left: auto; /* Push the role to the far right */
+}
+
+/* Hover effect for each patient item */
+.patient-item:hover {
+  background-color: #f1f1f1; /* Light grey background when hovered */
+}
+
+/* Error message styling */
+.error {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Style for the Message button */
+.message-btn {
+  background-color: #236a8a; /* Blue background */
+  color: white; /* White text */
+  padding: 8px 15px; /* Adjust padding for a smaller button */
+  border: none;
+  cursor: pointer;
+  font-size: 14px; /* Adjust font size */
+  transition: background-color 0.3s ease;
+  position: absolute; /* To place it separately from the text */
+  right: 20px; /* Position the button to the right */
+  top: 50%; /* Vertically center the button */
+  transform: translateY(-50%); /* Adjust for exact vertical centering */
+}
+
+.message-btn:hover {
+  background-color: #1d4f67; /* Darker blue on hover */
+}
+.notification {
+  background-color: #555;
+  color: white;
+  text-decoration: none;
+  padding: 15px 26px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification:hover {
+  background: red;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
