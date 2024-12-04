@@ -110,11 +110,7 @@ public class EncounterAndConditionController {
         try {
             String newDiagnosis = conditionDTO.getDiagnosis();
             Condition.Status newStatus = conditionDTO.getStatus();
-
-            // Call the service to update the condition
             Condition updatedCondition = conditionService.updateCondition(conditionId, newDiagnosis, newStatus);
-
-            // Return the updated condition in the response
             return ResponseEntity.ok(updatedCondition);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid status value. Please use ACTIVE or RESOLVED.");
