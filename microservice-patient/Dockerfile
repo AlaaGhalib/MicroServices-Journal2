@@ -8,7 +8,7 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
-COPY target/microservice-patient.jar app.jar
+COPY target/microservice-patient-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 

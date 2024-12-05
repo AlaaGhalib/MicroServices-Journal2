@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>journal-system</artifactId>
+    <artifactId>microservice-patient</artifactId> <!-- Updated -->
     <version>0.0.1-SNAPSHOT</version>
-    <name>JournalSystem</name>
-    <description>JournalSystem</description>
+    <name>Microservice Patient</name> <!-- Updated -->
+    <description>Handles patient management in the Journal System</description> <!-- Updated -->
     <url/>
     <licenses>
         <license/>

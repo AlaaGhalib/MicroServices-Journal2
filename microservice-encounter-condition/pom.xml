@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>journal-system</artifactId>
+    <artifactId>microservice-encounter-condition</artifactId> <!-- Updated -->
     <version>0.0.1-SNAPSHOT</version>
-    <name>JournalSystem</name>
-    <description>JournalSystem</description>
+    <name>Microservice Encounter Condition</name> <!-- Updated -->
+    <description>Handles encounter and condition management in the Journal System</description> <!-- Updated -->
     <url/>
     <licenses>
         <license/>
