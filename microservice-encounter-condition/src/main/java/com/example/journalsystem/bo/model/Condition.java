@@ -25,9 +25,8 @@ public class Condition {
     @Column(nullable = false)
     private Status status; // Status of the diagnosis (ACTIVE or RESOLVED)
 
-    @ManyToOne
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient; // Reference to the associated patient
+    @Column(nullable = false)
+    private Long patientId; // Reference to the associated patient
 
     // Enum for diagnosis status
     public enum Status {
@@ -35,9 +34,9 @@ public class Condition {
     }
 
     // Constructor to initialize the fields
-    public Condition(String diagnosis, Status status, Patient patient) {
+    public Condition(String diagnosis, Status status, Long patientId) {
         this.diagnosis = diagnosis;
         this.status = status;
-        this.patient = patient;
+        this.patientId = patientId;
     }
 }

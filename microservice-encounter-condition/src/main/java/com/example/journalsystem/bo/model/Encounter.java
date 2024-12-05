@@ -23,16 +23,15 @@ public class Encounter {
 
     private String reason;
 
-    @ManyToOne
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+    @Column(nullable = false)
+    private Long patientId;
 
-    private String notes; // This replaces observations list with a single "notes" column
+    private String notes;
 
-    public Encounter(LocalDateTime dateTime, String reason, Patient patient, String notes) {
+    public Encounter(LocalDateTime dateTime, String reason, Long patientId, String notes) {
         this.dateTime = dateTime;
         this.reason = reason;
-        this.patient = patient;
+        this.patientId = patientId;
         this.notes = notes;
     }
 }

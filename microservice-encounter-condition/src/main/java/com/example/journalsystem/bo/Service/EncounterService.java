@@ -1,7 +1,7 @@
 package com.example.journalsystem.bo.Service;
 
 import com.example.journalsystem.bo.model.Encounter;
-import com.example.journalsystem.bo.model.Patient;
+import com.example.journalsystem.bo.model.User;
 import com.example.journalsystem.db.EncounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +15,8 @@ public class EncounterService {
     @Autowired
     private EncounterRepository encounterRepository;
 
-    public List<Encounter> getEncountersByPatient(Patient patient) {
-        return encounterRepository.findByPatient(patient);
+    public List<Encounter> getEncountersByPatient(Long patientId) {
+        return encounterRepository.findByPatientId(patientId);
     }
 
     public Optional<Encounter> findEncounterById(Long id) {
