@@ -17,13 +17,13 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 public class EncounterAndConditionController {
 
-    private final PatientService patientService;
+    private final UserService userService;
     private final EncounterService encounterService;
     private final ConditionService conditionService;
 
     @Autowired
-    public EncounterAndConditionController(PatientService patientService, EncounterService encounterService, ConditionService conditionService) {
-        this.patientService = patientService;
+    public EncounterAndConditionController(UserService userService, EncounterService encounterService, ConditionService conditionService) {
+        this.userService = userService;
         this.encounterService = encounterService;
         this.conditionService = conditionService;
     }
@@ -39,20 +39,26 @@ public class EncounterAndConditionController {
     public static class ConditionDTO {
         private Long patientId;
         private String diagnosis;
-        private Condition.Status status; // ACTIVE or RESOLVED
+        private Condition.Status status;
     }
 
     @PostMapping("/encounters/add")
     public ResponseEntity<?> addEncounter(@RequestBody EncounterDTO encounterDTO) {
-        Optional<Patient> patientOpt = patientService.findPatientById(encounterDTO.getPatientId());
-        if (patientOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found.");
+        try {
+            Encounter encounter = new Encounter(
+                    LocalDateTime.now(),
+                    encounterDTO.getReason(),
+                    encounterDTO.getPatientId(),
+                    encounterDTO.getNotes()
+            );
+            Encounter savedEncounter = encounterService.createEncounter(encounter);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedEncounter);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to add encounter due to server error: " + e.getMessage());
         }
-        Patient patient = patientOpt.get();
-        Encounter encounter = new Encounter(LocalDateTime.now(), encounterDTO.getReason(), patient, encounterDTO.getNotes());
-        Encounter savedEncounter = encounterService.createEncounter(encounter);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedEncounter);
     }
+
 
     @PutMapping("/encounters/{encounterId}/update-notes")
     public ResponseEntity<?> updateEncounterNotes(@PathVariable Long encounterId, @RequestBody String notes) {
@@ -68,34 +74,29 @@ public class EncounterAndConditionController {
 
     @GetMapping("/encounters/patient/{patientId}")
     public ResponseEntity<?> getEncountersByPatient(@PathVariable Long patientId) {
-        Optional<Patient> patientOpt = patientService.findPatientById(patientId);
+        Optional<User> patientOpt = userService.findPatientById(patientId);
         if (patientOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found.");
         }
-        List<Encounter> encounters = encounterService.getEncountersByPatient(patientOpt.get());
+        List<Encounter> encounters = encounterService.getEncountersByPatient(patientId);
         return ResponseEntity.ok(encounters);
     }
     @GetMapping("/conditions/show/{patientId}")
     public ResponseEntity<?> getConditionByPatient(@PathVariable Long patientId) {
-        Optional<Patient> patientOpt = patientService.findPatientById(patientId);
+        Optional<User> patientOpt = userService.findPatientById(patientId);
         if (patientOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found.");
         }
-        List<Condition> conditions = conditionService.getConditionByPatient(patientOpt.get());
+        List<Condition> conditions = conditionService.getConditionByPatient(patientId);
         return ResponseEntity.ok(conditions);
     }
     @PostMapping("/conditions/add")
     public ResponseEntity<?> addCondition(@RequestBody ConditionDTO conditionDTO) {
         try {
-            Optional<Patient> patientOpt = patientService.findPatientById(conditionDTO.getPatientId());
-            if (patientOpt.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found.");
-            }
-            Patient patient = patientOpt.get();
             Condition condition = new Condition(
                     conditionDTO.getDiagnosis(),
                     conditionDTO.getStatus(),
-                    patient
+                    conditionDTO.getPatientId()
             );
             Condition savedCondition = conditionService.createCondition(condition);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedCondition);
