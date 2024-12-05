@@ -78,6 +78,10 @@ public class EncounterAndConditionController {
         if (patientOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found.");
         }
+        User user = patientOpt.get();
+        if(user.getRole()!=Role.PATIENT){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not a patient.");
+        }
         List<Encounter> encounters = encounterService.getEncountersByPatient(patientId);
         return ResponseEntity.ok(encounters);
     }
@@ -86,6 +90,10 @@ public class EncounterAndConditionController {
         Optional<User> patientOpt = userService.findPatientById(patientId);
         if (patientOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found.");
+        }
+        User user = patientOpt.get();
+        if(user.getRole()!=Role.PATIENT){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not a patient.");
         }
         List<Condition> conditions = conditionService.getConditionByPatient(patientId);
         return ResponseEntity.ok(conditions);
