@@ -29,11 +29,22 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    public User(String username, String password, String phoneNumber,Role role) {
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String dateOfBirth;
+
+    @Column(nullable = false)
+    private String address;
+
+    public User(String username, String password, String phoneNumber, Role role, String name, String dateOfBirth, String address) {
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = role;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
     }
-
 }
