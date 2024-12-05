@@ -29,6 +29,6 @@ public class Patient {
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.user = user;
-        this.id = user.getId(); // Set ID same as User ID
+        this.id = user.getId();
     }
 }
