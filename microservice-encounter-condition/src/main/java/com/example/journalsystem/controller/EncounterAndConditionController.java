@@ -32,7 +32,7 @@ public class EncounterAndConditionController {
     public static class EncounterDTO {
         private Long patientId;
         private String reason;
-        private String notes; // New field for notes
+        private String notes;
     }
 
     @Data
