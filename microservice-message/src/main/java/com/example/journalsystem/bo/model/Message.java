@@ -1,11 +1,13 @@
 package com.example.journalsystem.bo.model;
+
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Message {
 
     @Id
@@ -13,23 +15,21 @@ public class Message {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "sender_id", nullable = false)
-    private User sender;
+    @Column(name = "sender_id", nullable = false)
+    private Long senderId;  // Only stores the ID of the sender
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "recipient_id", nullable = false)
-    private User recipient;
+    @Column(name = "recipient_id", nullable = false)
+    private Long recipientId;  // Only stores the ID of the recipient
 
     @Column(nullable = false)
-    private String content;
+    private String content;  // The message content
 
     @Column(nullable = false)
-    private LocalDateTime sentAt;
+    private LocalDateTime sentAt;  // Timestamp of when the message was sent
 
-    public Message(User sender, User recipient, String content, LocalDateTime sentAt) {
-        this.sender = sender;
-        this.recipient = recipient;
+    public Message(Long senderId, Long recipientId, String content, LocalDateTime sentAt) {
+        this.senderId = senderId;
+        this.recipientId = recipientId;
         this.content = content;
         this.sentAt = sentAt;
     }
