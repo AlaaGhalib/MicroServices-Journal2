@@ -16,16 +16,16 @@ public class Message {
     private Long id;
 
     @Column(name = "sender_id", nullable = false)
-    private Long senderId;  // Only stores the ID of the sender
+    private Long senderId;
 
     @Column(name = "recipient_id", nullable = false)
-    private Long recipientId;  // Only stores the ID of the recipient
+    private Long recipientId;
 
     @Column(nullable = false)
-    private String content;  // The message content
+    private String content;
 
     @Column(nullable = false)
-    private LocalDateTime sentAt;  // Timestamp of when the message was sent
+    private LocalDateTime sentAt;
 
     public Message(Long senderId, Long recipientId, String content, LocalDateTime sentAt) {
         this.senderId = senderId;

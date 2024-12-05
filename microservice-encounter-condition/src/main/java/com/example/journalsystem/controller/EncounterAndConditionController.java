@@ -1,4 +1,5 @@
 package com.example.journalsystem.controller;
+
 import com.example.journalsystem.bo.Service.*;
 import com.example.journalsystem.bo.model.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,13 +18,11 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 public class EncounterAndConditionController {
 
-    private final UserService userService;
     private final EncounterService encounterService;
     private final ConditionService conditionService;
 
     @Autowired
-    public EncounterAndConditionController(UserService userService, EncounterService encounterService, ConditionService conditionService) {
-        this.userService = userService;
+    public EncounterAndConditionController(EncounterService encounterService, ConditionService conditionService) {
         this.encounterService = encounterService;
         this.conditionService = conditionService;
     }
@@ -48,7 +47,7 @@ public class EncounterAndConditionController {
             Encounter encounter = new Encounter(
                     LocalDateTime.now(),
                     encounterDTO.getReason(),
-                    encounterDTO.getPatientId(),
+                    encounterDTO.getPatientId(), 
                     encounterDTO.getNotes()
             );
             Encounter savedEncounter = encounterService.createEncounter(encounter);
@@ -58,7 +57,6 @@ public class EncounterAndConditionController {
                     .body("Failed to add encounter due to server error: " + e.getMessage());
         }
     }
-
 
     @PutMapping("/encounters/{encounterId}/update-notes")
     public ResponseEntity<?> updateEncounterNotes(@PathVariable Long encounterId, @RequestBody String notes) {
@@ -74,30 +72,22 @@ public class EncounterAndConditionController {
 
     @GetMapping("/encounters/patient/{patientId}")
     public ResponseEntity<?> getEncountersByPatient(@PathVariable Long patientId) {
-        Optional<User> patientOpt = userService.findPatientById(patientId);
-        if (patientOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found.");
+        List<Encounter> encounters = encounterService.getEncountersByPatientId(patientId);
+        if (encounters.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No encounters found for the given patient.");
         }
-        User user = patientOpt.get();
-        if(user.getRole()!=Role.PATIENT){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not a patient.");
-        }
-        List<Encounter> encounters = encounterService.getEncountersByPatient(patientId);
         return ResponseEntity.ok(encounters);
     }
+
     @GetMapping("/conditions/show/{patientId}")
     public ResponseEntity<?> getConditionByPatient(@PathVariable Long patientId) {
-        Optional<User> patientOpt = userService.findPatientById(patientId);
-        if (patientOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found.");
+        List<Condition> conditions = conditionService.getConditionByPatientId(patientId);
+        if (conditions.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No conditions found for the given patient.");
         }
-        User user = patientOpt.get();
-        if(user.getRole()!=Role.PATIENT){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not a patient.");
-        }
-        List<Condition> conditions = conditionService.getConditionByPatient(patientId);
         return ResponseEntity.ok(conditions);
     }
+
     @PostMapping("/conditions/add")
     public ResponseEntity<?> addCondition(@RequestBody ConditionDTO conditionDTO) {
         try {
@@ -114,6 +104,7 @@ public class EncounterAndConditionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add condition due to server error: " + e.getMessage());
         }
     }
+
     @PutMapping("/conditions/update/{conditionId}")
     public ResponseEntity<?> updateCondition(@PathVariable Long conditionId, @RequestBody ConditionDTO conditionDTO) {
         try {
@@ -130,4 +121,3 @@ public class EncounterAndConditionController {
         }
     }
 }
-

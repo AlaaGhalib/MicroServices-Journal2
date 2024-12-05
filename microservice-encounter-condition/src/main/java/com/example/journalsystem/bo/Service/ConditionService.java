@@ -17,10 +17,9 @@ public class ConditionService {
     public Condition createCondition(Condition condition) {
         return conditionRepository.save(condition);
     }
-    public List<Condition> getConditionByPatient(Long patientId) {
+    public List<Condition> getConditionByPatientId(Long patientId) {
         return conditionRepository.getConditionByPatientId(patientId);
     }
-    // Update condition method
     public Condition updateCondition(Long conditionId, String diagnosis, Condition.Status status) {
         Optional<Condition> conditionOpt = conditionRepository.findById(conditionId);
         if (conditionOpt.isPresent()) {
