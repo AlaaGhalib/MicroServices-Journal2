@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: microservice-user-service
+  name: microservice-message-service
 spec:
   selector:
-    app: microservice-user
+    app: microservice-message
   ports:
     - protocol: TCP
-      port: 80
+      port: 8080
       targetPort: 8080
   type: ClusterIP

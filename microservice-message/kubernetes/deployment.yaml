@@ -1,24 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: microservice-user
+  name: microservice-message-deployment
   labels:
-    app: microservice-user
+    app: microservice-message
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: microservice-user
+      app: microservice-message
   template:
     metadata:
       labels:
-        app: microservice-user
+        app: microservice-message
     spec:
       containers:
-        - name: microservice-user
-          image: microservice-user:1.0
+        - name: microservice-message
+          image: your-docker-repo/microservice-message:latest
           ports:
             - containerPort: 8080
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "kubernetes"
+              value: prod
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+              subPath: application.properties
+          command: ["java", "-jar", "app.jar", "--spring.config.location=/config/application.properties"]
+      volumes:
+        - name: config-volume
+          configMap:
+            name: microservice-message-config

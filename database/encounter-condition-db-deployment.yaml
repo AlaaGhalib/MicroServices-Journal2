@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: encounter-condition-db-deployment
+  labels:
+    app: encounter-condition-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: encounter-condition-db
+  template:
+    metadata:
+      labels:
+        app: encounter-condition-db
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          env:
+            - name: MYSQL_DATABASE
+              value: encounterconditionservice
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_PASSWORD
+              value: Aprilapril23.
+            - name: MYSQL_ROOT_PASSWORD
+              value: Aprilapril23.
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          emptyDir: {}

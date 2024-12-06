@@ -47,7 +47,7 @@ public class EncounterAndConditionController {
             Encounter encounter = new Encounter(
                     LocalDateTime.now(),
                     encounterDTO.getReason(),
-                    encounterDTO.getPatientId(), 
+                    encounterDTO.getPatientId(),
                     encounterDTO.getNotes()
             );
             Encounter savedEncounter = encounterService.createEncounter(encounter);
