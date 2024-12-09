@@ -14,7 +14,7 @@ const Login = () => {
     try {
       // Send the login request to the backend
       const response = await axios.post(
-        'http://localhost:8080/api/login', // Adjusted the endpoint
+          'http://localhost:8080/api/user/login', // Adjusted the endpoint
         { username, password },
         {
           withCredentials: true, // Ensure cookies are sent with the request

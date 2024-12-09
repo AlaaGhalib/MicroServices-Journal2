@@ -10,25 +10,8 @@ export default function RegisterForm() {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState('');
 
-  // Hardcoded list of specialties (can be fetched from an API)
-  const specialties = [
-    "Cardiology",
-    "Neurology",
-    "Pediatrics",
-    "Orthopedics",
-    "Dermatology",
-    "General Medicine",
-    "Psychiatry",
-    "Surgery",
-    "Security",
-    "Receptionist",
-    "Janitorial & housekeeping",
-    "Maintenance",
-    "IT Support",
-  ];
-
   const onSubmit = async (data) => {
-    const { username, password, confirmpwd, mobile, role, specialty, name, address, date_of_birth } = data;
+    const { username, password, confirmpwd, mobile, role, name, address, date_of_birth } = data;
 
     // Password confirmation check
     if (password !== confirmpwd) {
@@ -36,37 +19,53 @@ export default function RegisterForm() {
       return;
     }
 
-    let userData = {
+    // Build the user data object
+    const userData = {
       username,
       password,
       phoneNumber: mobile,
       role,
+      name: name || null,
+      address: address || null,
+      dateOfBirth: date_of_birth || null,
     };
 
-    let url = '';
-    if (role === 'PATIENT') {
-      userData = { ...userData, name, address, dateOfBirth: date_of_birth };
-      url = 'http://localhost:8080/api/register/patient';
-    } else if (role === 'DOCTOR' || role === 'STAFF') {
-      userData = { ...userData, name, specialty };
-      url = 'http://localhost:8080/api/register/practitioner';
-    } else {
-      alert("Invalid role selected.");
-      return;
-    }
-
     try {
-      console.log("User Data to Submit:", userData); // Log data being sent
-      const response = await axios.post(url, userData);
-      console.log("API Response:", response); // Log API response
-
+      const response = await axios.post('http://localhost:8080/api/user/register', userData);
       if (response.status === 201) {
         alert("User registered successfully");
         navigate('/'); // Redirect to login after successful registration
       }
     } catch (error) {
-      console.error("Registration error:", error);
-      alert("Registration failed. Please try again.");
+      if (error.response) {
+        // Check for conflict errors (HTTP status 409)
+        if (error.response.status === 409) {
+          alert(error.response.data); // Display conflict error message (e.g., username or phone already exists)
+        }
+        // Handle other specific error statuses (e.g., 500 Internal Server Error)
+        else if (error.response.status === 500) {
+          alert('Internal server error occurred. Please try again later.');
+        }
+        // Handle other possible error statuses (e.g., 400 Bad Request)
+        else if (error.response.status === 400) {
+          alert('Bad Request. Please check the input fields and try again.');
+        }
+        // Handle unexpected errors
+        else {
+          console.error("Unexpected error:", error);
+          alert('An unexpected error occurred. Please try again.');
+        }
+      }
+      // Handle errors where no response is received
+      else if (error.request) {
+        console.error("No response received:", error.request);
+        alert('Network error. Please check your internet connection and try again.');
+      }
+      // Handle general errors (e.g., unexpected issues in Axios itself)
+      else {
+        console.error('Error in setting up request:', error.message);
+        alert('An error occurred while setting up the request.');
+      }
     }
   };
 
@@ -74,24 +73,28 @@ export default function RegisterForm() {
     <section>
       <div className="register">
         <div className="col-1">
-        <h2 className="signup-heading">Sign Up</h2>
-        <span>Register and enjoy the service</span>
+          <h2 className="signup-heading">Sign Up</h2>
+          <span>Register and enjoy the service</span>
 
           <form id='form' className='flex flex-col' onSubmit={handleSubmit(onSubmit)}>
-            {/* Common Fields */}
+            {/* Username */}
             <input type="text" {...register("username", { required: true })} placeholder='Username' />
             {errors.username && <p className="error">Username is required</p>}
 
+            {/* Password */}
             <input type="password" {...register("password", { required: true })} placeholder='Password' />
             {errors.password && <p className="error">Password is required</p>}
 
+            {/* Confirm Password */}
             <input type="password" {...register("confirmpwd", { required: true })} placeholder='Confirm Password' />
             {errors.confirmpwd && <p className="error">Password confirmation is required</p>}
 
+            {/* Mobile */}
             <input type="text" {...register("mobile", { required: true, maxLength: 10 })} placeholder='Mobile Number' />
             {errors.mobile?.type === "required" && <p className="error">Mobile Number is required</p>}
             {errors.mobile?.type === "maxLength" && <p className="error">Max Length Exceeded</p>}
 
+            {/* Role */}
             <select {...register("role", { required: true })} onChange={(e) => setSelectedRole(e.target.value)}>
               <option value="">Select Role</option>
               <option value="PATIENT">Patient</option>
@@ -100,8 +103,8 @@ export default function RegisterForm() {
             </select>
             {errors.role && <p className="error">Role is required</p>}
 
-            {/* Patient-Specific Fields */}
-            {selectedRole === 'PATIENT' && (
+            {/* Additional Fields for Patients */}
+            {(selectedRole === 'PATIENT' || selectedRole === 'DOCTOR' || selectedRole === 'STAFF') && (
               <>
                 <input type="text" {...register("name", { required: true })} placeholder='Name' />
                 {errors.name && <p className="error">Name is required</p>}
@@ -111,22 +114,6 @@ export default function RegisterForm() {
 
                 <input type="text" {...register("date_of_birth", { required: true })} placeholder='Date of Birth (YYYY-MM-DD)' />
                 {errors.date_of_birth && <p className="error">Date of Birth is required</p>}
-              </>
-            )}
-
-            {/* Doctor or Staff Specific Specialty Dropdown */}
-            {(selectedRole === 'DOCTOR' || selectedRole === 'STAFF') && (
-              <>
-                <input type="text" {...register("name", { required: true })} placeholder='Name' />
-                {errors.name && <p className="error">Name is required</p>}
-
-                <select {...register("specialty", { required: true })}>
-                  <option value="">Select Specialty</option>
-                  {specialties.map((specialty, index) => (
-                    <option key={index} value={specialty}>{specialty}</option>
-                  ))}
-                </select>
-                {errors.specialty && <p className="error">Specialty is required</p>}
               </>
             )}
 

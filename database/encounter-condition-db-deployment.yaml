@@ -20,8 +20,6 @@ spec:
           env:
             - name: MYSQL_DATABASE
               value: encounterconditionservice
-            - name: MYSQL_USER
-              value: root
             - name: MYSQL_PASSWORD
               value: Aprilapril23.
             - name: MYSQL_ROOT_PASSWORD

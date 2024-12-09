@@ -1,24 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: microservice-user
+  name: microservice-encounter-condition
   labels:
-    app: microservice-user
+    app: microservice-encounter-condition
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: microservice-user
+      app: microservice-encounter-condition
   template:
     metadata:
       labels:
-        app: microservice-user
+        app: microservice-encounter-condition
     spec:
       containers:
-        - name: microservice-user
-          image: microservice-user:1.0
+        - name: microservice-encounter-condition
+          image: localhost:5000/microservice-encounter-condition:1.0
           ports:
             - containerPort: 8080
           env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: "kubernetes"
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://encounter-condition-db-service:3306/encounterconditionservice
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: Aprilapril23.
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              value: com.mysql.cj.jdbc.Driver
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+            - name: SPRING_JPA_SHOW_SQL
+              value: "true"
+            - name: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
+              value: "30000"
+            - name: SPRING_SQL_INIT_PLATFORM
+              value: mysql
+            - name: SPRING_JPA_DATABASE_PLATFORM
+              value: org.hibernate.dialect.MySQLDialect
+            - name: SPRING_APPLICATION_NAME
+              value: microservice-encounter-condition

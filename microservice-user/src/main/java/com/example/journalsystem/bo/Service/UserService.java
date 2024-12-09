@@ -19,7 +19,6 @@ public class UserService {
      * Create a new user, encoding the password before saving.
      */
     public User createUser(User user) {
-        user.setPassword(user.getPassword());
         return userRepository.save(user);
     }
 

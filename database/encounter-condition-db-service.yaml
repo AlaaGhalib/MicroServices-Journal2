@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: encounter-condition-db-service
+  labels:
+    app: encounter-condition-db
 spec:
   selector:
     app: encounter-condition-db

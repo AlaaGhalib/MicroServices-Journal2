@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserManagementController {
 
@@ -74,7 +74,6 @@ public class UserManagementController {
         if (userService.findUserByPhoneNumber(registerRequest.getPhoneNumber()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Phone number already exists.");
         }
-
         try {
             User newUser = new User(
                     registerRequest.getUsername(),
@@ -85,9 +84,7 @@ public class UserManagementController {
                     registerRequest.getDateOfBirth(),
                     registerRequest.getAddress()
             );
-
             User savedUser = userService.createUser(newUser);
-
             Map<String, Object> response = Map.of(
                     "message", "User registered successfully",
                     "userDetails", Map.of(
@@ -99,9 +96,7 @@ public class UserManagementController {
                             "role", savedUser.getRole().toString()
                     )
             );
-
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to register user. Please try again.");
         }
