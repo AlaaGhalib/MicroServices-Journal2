@@ -55,5 +55,12 @@ public class UserService {
         }
         return false;
     }
-
+    public Optional<User> getPractitionerByUsername(String username) {
+        List<Role> practitionerRoles = List.of(Role.DOCTOR, Role.STAFF);
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isPresent() && practitionerRoles.contains(user.get().getRole())) {
+            return user;
+        }
+        return Optional.empty();
+    }
 }

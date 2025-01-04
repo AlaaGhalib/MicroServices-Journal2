@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class UserManagementController {
 
     private final UserService userService;
@@ -152,5 +152,11 @@ public class UserManagementController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(patients);
+    }
+
+    @GetMapping("/by-username/{username}")
+    public ResponseEntity<User> getPractitionerByUsername(@PathVariable String username) {
+        Optional<User> practitioner = userService.getPractitionerByUsername(username);
+        return practitioner.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(404).body(null));
     }
 }

@@ -25,9 +25,15 @@ spec:
           ports:
             - containerPort: 3306
           volumeMounts:
-            - name: mysql-persistent-storage
+            - name: mysql-data
               mountPath: /var/lib/mysql
+            - name: mysql-config-volume
+              mountPath: /etc/mysql/my.cnf
+              subPath: my.cnf
       volumes:
-        - name: mysql-persistent-storage
+        - name: mysql-data
           persistentVolumeClaim:
             claimName: mysql-pvc
+        - name: mysql-config-volume
+          configMap:
+            name: mysql-config
